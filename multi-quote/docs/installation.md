@@ -1,13 +1,13 @@
 # Cài đặt multi-quote
 
-Mục lục: [Yêu cầu](#yêu-cầu) · [Cài từ GitHub](#cài-từ-github-marketplace) · [Cài từ thư mục local](#cài-từ-thư-mục-local-để-phát-triển) · [Cập nhật](#cập-nhật) · [Gỡ cài đặt](#gỡ-cài-đặt) · [Kiểm tra](#kiểm-tra-mod)
+Mục lục: [Yêu cầu](#yêu-cầu) · [Cài từ GitHub](#cài-từ-github) · [Cài từ thư mục local](#cài-từ-thư-mục-local-để-phát-triển) · [Cập nhật](#cập-nhật) · [Gỡ cài đặt](#gỡ-cài-đặt) · [Kiểm tra](#kiểm-tra-mod)
 
 ## Yêu cầu
 
 - Claude Code hỗ trợ mod dạng function hook. Mod được viết và test trên bản **2.1.314**. Nếu máy dùng bản cũ hơn, chạy `claude update`.
 - Nếu cài từ GitHub: có `git` trên máy. Repo `trungnn-1883/claude_mods` là public, không cần tài khoản GitHub hay quyền gì thêm.
 
-## Cài từ GitHub marketplace
+## Cài từ GitHub
 
 Trong Claude Code:
 
@@ -23,7 +23,7 @@ claude plugin install multi-quote --marketplace trungnn-1883/claude_mods
 
 Lần đầu cài, Claude Code hỏi `Add marketplace?` kèm nguồn `github:trungnn-1883/claude_mods`: trả lời `y`, rồi chọn phạm vi cài (mặc định là user, tức mọi phiên của bạn). Trong ứng dụng desktop, nơi `/plugin` không chạy: bấm **+** cạnh ô prompt → **Plugins** → **Add marketplace** với `trungnn-1883/claude_mods` → **Add plugin**.
 
-Marketplace trong repo tên là `claude-mods`, chứa plugin `multi-quote` (nguồn `./multi-quote`).
+Không cần đăng ký hay đẩy lên chợ ứng dụng nào. "Marketplace" trong Claude Code chỉ là file danh mục `.claude-plugin/marketplace.json` nằm sẵn trong repo này (tên `claude-mods`, chứa plugin `multi-quote` ở thư mục `./multi-quote`). Khi bạn chạy lệnh cài, Claude Code clone repo, đọc file đó để tìm mod rồi cài. Nó không liên quan tới GitHub Marketplace.
 
 ## Cài từ thư mục local (để phát triển)
 
