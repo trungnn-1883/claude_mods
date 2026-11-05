@@ -36,6 +36,7 @@ Repo là public nên ai cũng cài được, không cần tài khoản hay quy�
 | [docs/interface.md](docs/interface.md) | Pane Quotes: ảnh chụp, từng thành phần và thao tác khi bấm |
 | [docs/examples.md](docs/examples.md) | Ba ví dụ từ đầu đến cuối, kèm nguyên văn tin nhắn gửi cho Claude |
 | [docs/privacy.md](docs/privacy.md) | Dữ liệu đi đâu: mod không gửi gì ra ngoài, chỉ tin bạn bấm gửi mới tới Claude |
+| [CHANGELOG.md](CHANGELOG.md) | Các phiên bản và thay đổi của từng bản |
 
 ## Các file trong thư mục
 
