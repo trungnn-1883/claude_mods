@@ -1,6 +1,6 @@
 {
   "name": "multi-quote",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Quote several passages of Claude's replies, comment on each, and send them back as one follow-up.",
   "types": "./types/index.d.ts"
 }

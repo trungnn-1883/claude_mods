@@ -8,7 +8,6 @@ import {
   clearAll,
   commentField,
   deleteComment,
-  jumpToQuote,
   openQuote,
   readComposer,
   say,
@@ -82,16 +81,7 @@ export async function drawComposer($: EngineInterface, e: RenderInput<'Pane'>) {
                     }}
                   />
                 ) : (
-                  <Button
-                    key={`jump:${quote.id}`}
-                    plain
-                    onPress={async () => {
-                      const problem = await jumpToQuote($, quote.id)
-                      if (problem !== undefined) $.ui.toast(problem)
-                    }}
-                  >
-                    <Text italic dimColor>{`“${quote.selectedText}”`}</Text>
-                  </Button>
+                  <Text italic dimColor>{`“${quote.selectedText}”`}</Text>
                 )}
                 <Box key={`comments:${quote.id}`} flexDirection="column" gap={1}>
                   {written === 0 && !isWritingHere && <Text dimColor>No comments yet</Text>}

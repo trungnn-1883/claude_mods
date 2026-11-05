@@ -14,8 +14,6 @@ Tóm tắt: **mod không gửi gì ra khỏi máy và không gửi cho bên th�
 | `$.session.id` | Lấy mã phiên để gắn vào quote | Không |
 | `$.session.messages` | Đọc câu trả lời mới nhất cho `/quote-last` và **+ Last reply** | Không |
 | `$.command.register` | Đăng ký các lệnh `/quote…` | Không |
-| `$.ui.scroll` | Cuộn khung chat tới tin gốc khi bạn bấm vào đoạn trích | Không |
-| Sự kiện `ui.render` của câu trả lời | Đọc chữ của các câu trả lời Claude đang hiện, giữ trong bộ nhớ của phiên để tìm tin gốc; không lưu ra đâu, không sửa gì | Không |
 | Sự kiện `session.append` | Thấy từng dòng sắp lưu vào cuộc trò chuyện; **chỉ sửa** mẩu giấy nhắn của chính các lệnh `/quote…` cho ngắn lại, mọi dòng khác đi qua nguyên vẹn | Không |
 | `$.prompt.submit` | Gửi tin nhắn khi bạn bấm **Send to Claude** hoặc gõ `/quote-send` | Có, xem bên dưới |
 

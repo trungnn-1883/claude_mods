@@ -2,7 +2,6 @@ import type { Register } from 'claude-code'
 
 import { markOwnCommandRun, trimRecord } from './command-record-trim'
 import { drawComposer } from './composer-pane'
-import { rememberReply } from './transcript-index'
 import { PANE, TITLE, add, addLastReply, addSelection, clearAll, send } from './quote-actions'
 
 export const register: Register = on => {
@@ -51,12 +50,6 @@ export const register: Register = on => {
   })
 
   on('ui.render', { component: 'Pane', requestId: PANE }, ($, e) => drawComposer($, e))
-
-  // Index each reply as it is drawn, leaving the drawing to the engine.
-  on('ui.render', { component: 'AssistantMessage' }, ($, e, next) => {
-    rememberReply(e.requestId, e.props.text)
-    return next(e)
-  })
 
   // Shrink the chat's record of the mod's own commands; every other row passes untouched.
   on('session.append', ($, e, next) => {

@@ -40,7 +40,7 @@ Khi chưa có quote nào, dòng gợi ý hiện ra: `Select text in a reply, the
 | Header `Quotes · N` | Số quote hiện có | Không làm gì |
 | `+ Last reply` | Nút ở góc phải header | Thêm câu trả lời text gần nhất của Claude làm quote (giống `/quote-last`). Lỗi hiện dạng toast |
 | Dòng quote `▸ N “tóm tắt…” 💬 k` | Số thứ tự, đoạn đầu quote rút gọn về một dòng, `k` là số comment đã viết | Mở quote (đổi thành `▾`). Bấm lại quote đang mở thì đóng |
-| Text quote (khi mở) | Toàn văn quote, chữ nghiêng, mờ | Cuộn khung chat tới câu trả lời chứa đoạn đó. VS Code không cho cuộn, nên ở đó chỉ hiện thông báo; xem [usage.md](usage.md#giới-hạn) |
+| Text quote (khi mở) | Toàn văn quote, chữ nghiêng, mờ | Không làm gì |
 | `No comments yet` | Hiện khi quote mở chưa có comment nào | Không làm gì |
 | `• comment` | Mỗi comment là một nút, các comment cách nhau một dòng trống | Mở ô nhập để sửa comment đó |
 | `✕` cạnh comment | Nút xóa | Xóa comment đó |

@@ -1,5 +1,20 @@
 # Nhật ký thay đổi multi-quote
 
+## 0.2.1 (2026-11-05)
+
+### Bỏ
+
+- **Bỏ tính năng tìm tin gốc của quote** (thêm ở 0.2.0). Trên VS Code, Claude Code không cho mod cuộn khung chat, nên bấm vào đoạn trích lần nào cũng báo lỗi. Đoạn trích trong khung Quotes trở lại là chữ thường, không bấm được.
+- Kèm theo đó, mod **không còn đọc chữ các câu trả lời của Claude** để tìm tin. `docs/privacy.md` đã bỏ hai dòng tương ứng.
+
+### Nâng cấp
+
+```bash
+claude plugin update multi-quote@claude-mods
+```
+
+rồi `/reload-plugins`.
+
 ## 0.2.0 (2026-11-05)
 
 Bản này tập trung vào **tốn ít token hơn**. Thêm vào đó là tìm tin gốc của một quote, và khung Quotes dễ đọc hơn.

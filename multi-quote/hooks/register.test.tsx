@@ -228,61 +228,15 @@ test('the pane has no Add selection button; /quote still says how to quote, with
   await ui.unmount()
 })
 
-test('pressing a quote goes to the message it came from, or says why it cannot', async ($, on) => {
-  const toasts: string[] = []
-  engine(on, { text: 'Use middleware.', requestId: 'msg-7' }, toasts)
+test("a quote's text is plain text, not a button that goes to the message", async ($, on) => {
+  engine(on, { text: 'Use middleware.', requestId: 'msg-7' })
   await start($)
   await run($, 'quote')
-  await run($, 'quote', 'Typed by hand')
 
   const ui = await $.ui.mount({ ...PANE, surface: 'vscode' })
-  const [fromSelection = '', typed = ''] = await quoteIds(ui)
-  // A quote from a selection knows its message, so the pane asks the chat to scroll there.
-  // The test kit has no chat to scroll, so the attempt surfaces as "Couldn't go…".
-  await ui.press({ key: `open:${fromSelection}` })
-  await ui.press({ key: `jump:${fromSelection}` })
-  expect(toasts.at(-1)).toMatch(/Couldn't go to the message/)
-
-  // A quote typed by hand that no reply holds has no message to go to: say so instead of trying.
-  await ui.press({ key: `open:${typed}` })
-  await ui.press({ key: `jump:${typed}` })
-  expect(toasts.at(-1)).toMatch(/Couldn't find/)
-  await ui.unmount()
-})
-
-test('a quote with no message id is found by its text among the replies drawn so far', async ($, on) => {
-  const toasts: string[] = []
-  engine(on, undefined, toasts)
-  // Stands for the engine's own drawing of a transcript row beneath the mod.
-  on('ui.render', ($, e) => {
-    const { Text } = $.ui.resolve(e)
-    return <Text>row</Text>
-  })
-  await start($)
-
-  // Claude's reply as the surface draws it: markdown, which the selection reads as plain text.
-  const reply = await $.ui.mount({
-    plugin: 'multi-quote',
-    surface: 'vscode',
-    component: 'AssistantMessage',
-    requestId: 'msg-9',
-    props: { text: '- **Use middleware** for auth.\n- Retry with `backoff`.', isFirstOfReply: true },
-  })
-  await reply.unmount()
-
-  await run($, 'quote', 'Use middleware for auth. Retry with backoff')
-  await run($, 'quote', 'Something Claude never said')
-  const ui = await $.ui.mount({ ...PANE, surface: 'vscode' })
-  const [found = '', missing = ''] = await quoteIds(ui)
-
-  // Found: the pane asks the chat to scroll there (the test kit has no chat, hence "Couldn't go").
-  await ui.press({ key: `open:${found}` })
-  await ui.press({ key: `jump:${found}` })
-  expect(toasts.at(-1)).toMatch(/Couldn't go to the message/)
-
-  await ui.press({ key: `open:${missing}` })
-  await ui.press({ key: `jump:${missing}` })
-  expect(toasts.at(-1)).toMatch(/Couldn't find/)
+  const [id = ''] = await quoteIds(ui)
+  expect(await ui.find({ key: `jump:${id}` })).toBeUndefined()
+  expect(await ui.find({ type: 'Text', text: '“Use middleware.”' })).toBeDefined()
   await ui.unmount()
 })
 

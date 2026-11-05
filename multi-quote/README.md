@@ -47,7 +47,6 @@ Repo là public nên ai cũng cài được, không cần tài khoản hay quy�
 - `hooks/quote-actions.ts`: state của mod và các thao tác trên state (thêm, gửi, mở ô nhập)
 - `hooks/quote-annotations.ts`: các thao tác thuần trên danh sách và cách dựng nội dung follow-up
 - `hooks/command-record-trim.ts`: thu gọn mẩu giấy nhắn Claude Code ghi cho các lệnh `/quote…` để bớt token
-- `hooks/transcript-index.ts`: ghi nhớ các câu trả lời đã hiện để tìm tin gốc của một quote
-- `hooks/register.test.tsx`: test (11 test)
+- `hooks/register.test.tsx`: test (10 test)
 - `types/index.d.ts`: kiểu `QuoteAnnotation` và state `$.state` của mod
 - `docs/`: tài liệu người dùng (xem bảng trên), ảnh chụp trong `docs/images/`

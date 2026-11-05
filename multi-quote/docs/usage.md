@@ -85,7 +85,6 @@ Phần ~55 token còn lại chủ yếu là dòng `multi-quote: Quote added.` b�
 
 - **Đọc text đang chọn:** mod dùng `$.ui.selection()` của engine. Cách này chạy trong panel VS Code và trong terminal fullscreen, khi bạn gõ `/quote` lúc text vẫn đang được chọn. Nơi nào engine không báo selection thì `/quote` trả về thông báo `Nothing selected...` ở trên; dùng `/quote <text>` hoặc `/quote-last`.
 - **Không có nút "Add selection" trong pane:** trong VS Code, bấm nút làm mất selection nên nút không đọc được text đã chọn. Vì vậy chỉ có `/quote`.
-- **Đi tới tin gốc:** bấm vào đoạn trích của quote đang mở để cuộn tới câu trả lời chứa nó. Mod tìm tin bằng mã tin (terminal toàn màn hình báo mã khi bôi đen) hoặc, nếu không có, bằng nội dung chữ trong các câu trả lời của Claude đã hiện trong phiên. Trong **VS Code, Claude Code không cho mod cuộn khung chat**: bấm sẽ hiện `Couldn't go to the message: transcript not scrollable here`. Không tìm thấy thì hiện `Couldn't find this passage…`.
 - **Quote chỉ tồn tại trong session.** Không lưu sang session khác.
 - **Mobile không có ô nhập text và menu:** xem danh sách, mở quote, đổi thứ tự (↑ ↓), xóa, gửi được; không viết hay sửa comment, không sửa text quote được.
 - **Pane tự mở chỉ khi terminal đủ rộng:** từ 144 cột trở lên, hoặc từ 110 cột trở lên khi bạn đã chủ động mở. Terminal hẹp hơn thì dùng `/quotes`.
