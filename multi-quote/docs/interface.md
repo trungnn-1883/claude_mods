@@ -6,7 +6,11 @@ Pane Quotes là nơi xem, comment và gửi các quote. Mở bằng `/quotes`, h
 
 ## Bố cục
 
-Hai quote, quote 1 đang mở:
+Ảnh chụp trong VS Code: hai quote, quote 2 đang mở với hai comment, quote 1 đóng (có 3 comment).
+
+![Khung Quotes trong VS Code](images/quotes-pane.png)
+
+Trên VS Code các nút là nút gốc của VS Code nên luôn có nền xanh. Sơ đồ dưới đây vẽ cùng bố cục dạng chữ, hai quote, quote 1 đang mở:
 
 ```
 Quotes · 2                                    + Last reply

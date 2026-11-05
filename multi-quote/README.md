@@ -2,6 +2,8 @@
 
 Mod cho Claude Code, hoạt động giống "quote đoạn đã chọn" của ChatGPT nhưng quote được nhiều đoạn cùng lúc. Bạn chọn text trong câu trả lời của Claude, thêm mỗi đoạn thành một quote, viết comment cho từng quote, rồi gửi tất cả lại cho Claude trong một tin nhắn follow-up duy nhất. Tin nhắn đi như prompt của chính bạn, trong cùng session, nên Claude vẫn giữ nguyên ngữ cảnh.
 
+<img src="docs/images/quotes-pane.png" alt="Khung Quotes trong VS Code" width="400">
+
 ## Bắt đầu nhanh
 
 1. Dùng chuột chọn một đoạn trong câu trả lời của Claude.
@@ -31,7 +33,8 @@ Repo là private: máy bạn cần quyền đọc repo và một git credential 
 | --- | --- |
 | [docs/installation.md](docs/installation.md) | Cài, gỡ, cập nhật, yêu cầu phiên bản, kiểm tra mod |
 | [docs/usage.md](docs/usage.md) | Từng command, quy trình làm việc, nội dung tin nhắn gửi cho Claude, giới hạn |
-| [docs/interface.md](docs/interface.md) | Pane Quotes: từng thành phần và thao tác khi bấm |
+| [docs/interface.md](docs/interface.md) | Pane Quotes: ảnh chụp, từng thành phần và thao tác khi bấm |
+| [docs/examples.md](docs/examples.md) | Ba ví dụ từ đầu đến cuối, kèm nguyên văn tin nhắn gửi cho Claude |
 
 ## Các file trong thư mục
 
@@ -43,4 +46,4 @@ Repo là private: máy bạn cần quyền đọc repo và một git credential 
 - `hooks/quote-annotations.ts`: các thao tác thuần trên danh sách và cách dựng nội dung follow-up
 - `hooks/register.test.tsx`: test (8 test)
 - `types/index.d.ts`: kiểu `QuoteAnnotation` và state `$.state` của mod
-- `docs/`: tài liệu người dùng (xem bảng trên)
+- `docs/`: tài liệu người dùng (xem bảng trên), ảnh chụp trong `docs/images/`
