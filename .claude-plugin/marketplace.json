@@ -1,0 +1,11 @@
+{
+  "name": "claude-mods",
+  "owner": { "name": "trungnn-1883" },
+  "plugins": [
+    {
+      "name": "multi-quote",
+      "source": "./multi-quote",
+      "description": "Quote several passages of Claude's replies, comment on each, send them back as one follow-up"
+    }
+  ]
+}
