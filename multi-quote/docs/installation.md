@@ -5,7 +5,7 @@ Mục lục: [Yêu cầu](#yêu-cầu) · [Cài từ GitHub](#cài-từ-github-m
 ## Yêu cầu
 
 - Claude Code hỗ trợ mod dạng function hook. Mod được viết và test trên bản **2.1.314**. Nếu máy dùng bản cũ hơn, chạy `claude update`.
-- Nếu cài từ GitHub: quyền đọc repo `trungnn-1883/claude_mods` (repo private).
+- Nếu cài từ GitHub: có `git` trên máy. Repo `trungnn-1883/claude_mods` là public, không cần tài khoản GitHub hay quyền gì thêm.
 
 ## Cài từ GitHub marketplace
 
@@ -21,12 +21,7 @@ Hoặc từ shell:
 claude plugin install multi-quote --marketplace trungnn-1883/claude_mods
 ```
 
-Repo là private nên trình cài đặt phải tự clone được bằng git. Nó không bao giờ hỏi bạn username hay token, vì vậy credential phải có sẵn trước khi cài. Hai cách phổ biến:
-
-- SSH key đã thêm vào tài khoản GitHub của bạn, hoặc
-- `gh auth login`, sau đó `gh auth setup-git` để git dùng credential của `gh`.
-
-Nếu cài báo lỗi không truy cập được repo, kiểm tra hai điều trên trước (tài khoản có quyền đọc repo không, git có credential cho github.com không). Thử `git ls-remote https://github.com/trungnn-1883/claude_mods` trong terminal: lệnh này chạy được thì trình cài đặt cũng chạy được.
+Lần đầu cài, Claude Code hỏi `Add marketplace?` kèm nguồn `github:trungnn-1883/claude_mods`: trả lời `y`, rồi chọn phạm vi cài (mặc định là user, tức mọi phiên của bạn). Trong ứng dụng desktop, nơi `/plugin` không chạy: bấm **+** cạnh ô prompt → **Plugins** → **Add marketplace** với `trungnn-1883/claude_mods` → **Add plugin**.
 
 Marketplace trong repo tên là `claude-mods`, chứa plugin `multi-quote` (nguồn `./multi-quote`).
 

@@ -33,7 +33,7 @@ Vì vậy, đừng quote hay viết vào comment những gì bạn không muốn
 
 ## Những thứ không do mod làm
 
-- **Repo GitHub `claude_mods`** chỉ chứa mã của mod và tài liệu này, không chứa dự án nào của bạn. Repo để private.
+- **Repo GitHub `claude_mods`** chỉ chứa mã của mod và tài liệu này, không chứa dự án nào của bạn. Repo để public: ai cũng đọc được mã của mod và tự kiểm tra những gì tài liệu này nói.
 - **Thống kê sử dụng của Claude Code:** Claude Code có thể tự gửi số liệu sử dụng theo cài đặt của bạn. Phần này là của Claude Code; mod không có hook nào đọc hay gửi thống kê.
 
 ## Tự kiểm tra

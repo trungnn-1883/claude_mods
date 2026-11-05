@@ -25,7 +25,7 @@ Hoặc từ shell:
 claude plugin install multi-quote --marketplace trungnn-1883/claude_mods
 ```
 
-Repo là private: máy bạn cần quyền đọc repo và một git credential cho github.com. Chi tiết, cách cài từ thư mục local, gỡ mod và cập nhật: [docs/installation.md](docs/installation.md).
+Repo là public nên ai cũng cài được, không cần tài khoản hay quyền gì thêm. Cách cài từ thư mục local, gỡ mod và cập nhật: [docs/installation.md](docs/installation.md).
 
 ## Tài liệu
 
