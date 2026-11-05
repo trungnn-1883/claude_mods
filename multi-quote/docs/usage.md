@@ -44,43 +44,48 @@ Tin nhắn được gửi như prompt kế tiếp của chính bạn, trong cùn
 Ví dụ, hai quote, quote 1 có hai comment, quote 2 chưa có comment, kèm overall instruction:
 
 ```
-Please review the following feedback on your earlier replies.
+Feedback:
 
-Quote 1:
-> Use a singleton for database connections.
+1. > Use a singleton for database connections.
+   - Do not use a singleton. We need multiple database connections.
+   - Explain how the pool is sized.
 
-Comments:
-1. Do not use a singleton. We need multiple database connections.
-2. Explain how the pool is sized.
+2. > Cache every response for an hour.
 
-Quote 2:
-> Cache every response for an hour.
-
-Comment:
-(no comment)
-
-Overall instruction:
-Address every comment individually and update the implementation.
+Overall: Address every comment individually and update the implementation.
 ```
 
 Quy tắc dựng nội dung:
 
 | Trường hợp | Kết quả |
 | --- | --- |
-| Quote có đúng một comment | `Comment:` rồi comment |
-| Quote có nhiều comment | `Comments:` rồi đánh số `1.`, `2.`... |
-| Quote không có comment (hoặc toàn comment trống) | `Comment:` rồi `(no comment)` |
-| Có overall instruction (sau khi bỏ khoảng trắng) | Thêm khối `Overall instruction:` ở cuối |
-| Không có overall instruction | Không có khối đó |
-| Quote nhiều dòng | Mỗi dòng bắt đầu bằng `> ` |
+| Mỗi quote | Số thứ tự rồi `> ` và đoạn quote: `1. > …` |
+| Quote nhiều dòng | Các dòng sau bắt đầu bằng `   > ` |
+| Mỗi comment | Một dòng `   - comment` thụt lề dưới quote của nó |
+| Quote không có comment (hoặc toàn comment trống) | Chỉ có quote, không có dòng `-` nào |
+| Có overall instruction (sau khi bỏ khoảng trắng) | Dòng `Overall: …` ở cuối |
+| Không có overall instruction | Không có dòng đó |
 
-Phần chữ cố định (`Please review...`, `Quote N:`, `Comment:`) luôn bằng tiếng Anh, vì code dựng như vậy.
+Định dạng này cố ý ngắn để tốn ít token; phần chữ cố định (`Feedback:`, `Overall:`) luôn bằng tiếng Anh vì code dựng như vậy.
+
+## Token
+
+Mod chỉ tốn token ở lúc gửi, như một tin nhắn bình thường. Thêm vào đó, mỗi lần gõ một lệnh `/…` Claude Code ghi một mẩu giấy nhắn vào cuộc trò chuyện (câu ghi chú, tên lệnh, kết quả lệnh) và Claude đọc nó ở lượt sau. Với các lệnh `/quote…`, mod thu gọn mẩu giấy đó: bỏ câu ghi chú, rút dòng lệnh còn `/quote`. Các lệnh khác giữ nguyên.
+
+Đo trên phiên thật (VS Code):
+
+| | Trước | Sau |
+| --- | --- | --- |
+| Mỗi lần `/quote` | ~150 token | ~55 token |
+| Một lần gửi 2 quote (gồm cả tin gộp) | ~390 token | ~200 token |
+
+Phần ~55 token còn lại chủ yếu là dòng `multi-quote: Quote added.` bạn thấy trên màn hình. Gửi 1–2 câu ngắn thì tự copy và gõ `>` vẫn rẻ hơn; mod có lợi khi quote nhiều đoạn ở nhiều tin. Một plugin khác chạy trước mod có thể cho một mẩu giấy đi qua mà không qua mod; khi đó mẩu đó được lưu nguyên.
 
 ## Giới hạn
 
 - **Đọc text đang chọn:** mod dùng `$.ui.selection()` của engine. Cách này chạy trong panel VS Code và trong terminal fullscreen, khi bạn gõ `/quote` lúc text vẫn đang được chọn. Nơi nào engine không báo selection thì `/quote` trả về thông báo `Nothing selected...` ở trên; dùng `/quote <text>` hoặc `/quote-last`.
 - **Không có nút "Add selection" trong pane:** trong VS Code, bấm nút làm mất selection nên nút không đọc được text đã chọn. Vì vậy chỉ có `/quote`.
-- **Selection trải qua nhiều dòng (row) không có response id.** Engine báo như vậy; text vẫn được quote bình thường.
+- **Đi tới tin gốc:** bấm vào đoạn trích của quote đang mở để cuộn tới câu trả lời chứa nó. Mod tìm tin bằng mã tin (terminal toàn màn hình báo mã khi bôi đen) hoặc, nếu không có, bằng nội dung chữ trong các câu trả lời của Claude đã hiện trong phiên. Trong **VS Code, Claude Code không cho mod cuộn khung chat**: bấm sẽ hiện `Couldn't go to the message: transcript not scrollable here`. Không tìm thấy thì hiện `Couldn't find this passage…`.
 - **Quote chỉ tồn tại trong session.** Không lưu sang session khác.
 - **Mobile không có ô nhập text và menu:** xem danh sách, mở quote, đổi thứ tự (↑ ↓), xóa, gửi được; không viết hay sửa comment, không sửa text quote được.
 - **Pane tự mở chỉ khi terminal đủ rộng:** từ 144 cột trở lên, hoặc từ 110 cột trở lên khi bạn đã chủ động mở. Terminal hẹp hơn thì dùng `/quotes`.

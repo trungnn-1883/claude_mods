@@ -3,6 +3,7 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface } from 'claude-code'
 
 import type { QuoteAnnotation } from '../types'
+import { findReply } from './transcript-index'
 import { addQuote, appendComment, buildFollowUp, pruneComments, removeComment } from './quote-annotations'
 
 export const PANE = 'quote-composer'
@@ -133,4 +134,22 @@ export async function startComment($: EngineInterface, id: string) {
 export async function deleteComment($: EngineInterface, id: string, index: number) {
   await update($, annotations, list => pruneComments(removeComment(list, id, index)))
   await update($, writing, () => null)
+}
+
+/** Scrolls the chat to the message a quote came from; answers why not when it cannot. */
+export async function jumpToQuote($: EngineInterface, id: string): Promise<string | undefined> {
+  const quote = (await read($, annotations)).find(one => one.id === id)
+  if (quote === undefined) return undefined
+  const requestId = quote.responseId ?? findReply(quote.selectedText)
+  if (requestId === undefined) {
+    return "Couldn't find this passage in Claude's replies shown in this session. Was it edited, or from an earlier session?"
+  }
+  try {
+    const moved = await $.ui.scroll({ to: { requestId }, block: 'center' })
+
+    return moved.deny === undefined ? undefined : `Couldn't go to the message: ${moved.deny}`
+  } catch (error) {
+    // A surface that scrolls no transcript rejects rather than denies.
+    return `Couldn't go to the message: ${error instanceof Error ? error.message : String(error)}`
+  }
 }

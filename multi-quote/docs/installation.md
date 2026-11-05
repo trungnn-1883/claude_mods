@@ -75,6 +75,6 @@ claude plugin validate <đường-dẫn>/multi-quote
 claude plugin test <đường-dẫn>/multi-quote
 ```
 
-`validate` kiểm tra manifest và cấu trúc plugin. `test` chạy 8 test trong `hooks/register.test.tsx`.
+`validate` kiểm tra manifest và cấu trúc plugin. `test` chạy 11 test trong `hooks/register.test.tsx`.
 
 Cài xong, gõ `/quotes` trong Claude Code. Nếu thấy pane **Quotes** mở ra (hoặc dòng "Quote composer opened.") thì mod đã chạy. Cách dùng: [usage.md](usage.md).

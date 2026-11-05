@@ -1,6 +1,6 @@
 # Ví dụ dùng multi-quote
 
-Ba tình huống thường gặp. Mỗi ví dụ có các bước làm và đúng nguyên văn tin nhắn mod gửi cho Claude. Phần chữ cố định (`Please review…`, `Quote N:`, `Comment:`) luôn là tiếng Anh vì mod dựng như vậy; quote và comment giữ nguyên chữ bạn viết.
+Ba tình huống thường gặp. Mỗi ví dụ có các bước làm và đúng nguyên văn tin nhắn mod gửi cho Claude. Phần chữ cố định (`Feedback:`, `Overall:`) luôn là tiếng Anh vì mod dựng như vậy; quote và comment giữ nguyên chữ bạn viết.
 
 Mục lục: [Góp ý một bản đề xuất](#1-góp-ý-một-bản-đề-xuất-thiết-kế) · [Hỏi lại nhiều chỗ](#2-hỏi-lại-nhiều-chỗ-trong-một-câu-trả-lời) · [Không chọn được text](#3-không-chọn-được-text)
 
@@ -17,28 +17,18 @@ Claude vừa đề xuất kiến trúc cho một service, trong đó có ba đi�
 Claude nhận được:
 
 ```
-Please review the following feedback on your earlier replies.
+Feedback:
 
-Quote 1:
-> Use a singleton for database connections.
+1. > Use a singleton for database connections.
+   - Không dùng singleton, mình cần nhiều kết nối DB.
 
-Comment:
-Không dùng singleton, mình cần nhiều kết nối DB.
+2. > Authentication should be handled by middleware.
+   - Giải thích rủi ro bảo mật của cách này.
 
-Quote 2:
-> Authentication should be handled by middleware.
+3. > Retry failed requests automatically.
+   - Thêm exponential backoff.
 
-Comment:
-Giải thích rủi ro bảo mật của cách này.
-
-Quote 3:
-> Retry failed requests automatically.
-
-Comment:
-Thêm exponential backoff.
-
-Overall instruction:
-Trả lời từng góp ý rồi sửa lại bản thiết kế.
+Overall: Trả lời từng góp ý rồi sửa lại bản thiết kế.
 ```
 
 ## 2. Hỏi lại nhiều chỗ trong một câu trả lời
@@ -47,29 +37,22 @@ Một câu trả lời dài có hai đoạn bạn chưa hiểu; đoạn thứ nh
 
 1. Bôi đen đoạn *"Cache invalidation runs on every write."*, gõ `/quote`, comment `Ghi nhiều thì có chậm không?`, Enter.
 2. Vẫn ở quote đó, bấm **+ Add comment**, gõ `Có cách nào gom lại theo lô không?`, Enter. Dòng quote giờ hiện `💬 2`.
-3. Bôi đen đoạn thứ hai, gõ `/quote`, và để trống comment (bấm sang chỗ khác). Quote không có comment vẫn được gửi.
+3. Bôi đen đoạn thứ hai, gõ `/quote`, và để trống comment (bấm sang chỗ khác). Quote không có comment vẫn được gửi, chỉ có đoạn quote.
 4. Gõ `/quote-send` thay vì bấm nút.
 
 Claude nhận được:
 
 ```
-Please review the following feedback on your earlier replies.
+Feedback:
 
-Quote 1:
-> Cache invalidation runs on every write.
+1. > Cache invalidation runs on every write.
+   - Ghi nhiều thì có chậm không?
+   - Có cách nào gom lại theo lô không?
 
-Comments:
-1. Ghi nhiều thì có chậm không?
-2. Có cách nào gom lại theo lô không?
-
-Quote 2:
-> The queue is drained by a single worker.
-
-Comment:
-(no comment)
+2. > The queue is drained by a single worker.
 ```
 
-Không có overall instruction nên không có khối `Overall instruction:` ở cuối.
+Không có overall instruction nên không có dòng `Overall:` ở cuối.
 
 ## 3. Không chọn được text
 
@@ -96,6 +79,5 @@ Gửi kèm lời nhắn chung ngay trong lệnh gửi, không cần mở ô tron
 Lời nhắn này dùng thay cho ô *Overall instruction* trong khung và ra ở cuối tin nhắn:
 
 ```
-Overall instruction:
-Sửa tất cả các điểm trên rồi chạy lại test.
+Overall: Sửa tất cả các điểm trên rồi chạy lại test.
 ```

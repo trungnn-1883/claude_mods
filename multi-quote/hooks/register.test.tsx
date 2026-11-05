@@ -1,4 +1,4 @@
-import { expect, test } from 'claude-code/testing'
+import { expect, mock, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
 import type { On } from 'claude-code'
 
@@ -77,11 +77,11 @@ test('the follow-up keeps each quote with its own comments and the overall instr
     'Address every comment.',
   )
   expect(text).toBe(
-    'Please review the following feedback on your earlier replies.\n\n' +
-      'Quote 1:\n> Use a singleton.\n\nComment:\nWe need several connections.\n\n' +
-      'Quote 2:\n> Line one\n> Line two\n\nComment:\n(no comment)\n\n' +
-      'Quote 3:\n> Retry.\n\nComments:\n1. Add backoff.\n2. Cap it at 5 tries.\n\n' +
-      'Overall instruction:\nAddress every comment.',
+    'Feedback:\n\n' +
+      '1. > Use a singleton.\n   - We need several connections.\n\n' +
+      '2. > Line one\n   > Line two\n\n' +
+      '3. > Retry.\n   - Add backoff.\n   - Cap it at 5 tries.\n\n' +
+      'Overall: Address every comment.',
   )
   expect(buildFollowUp([], 'anything')).toBe('')
 })
@@ -137,6 +137,9 @@ test('the composer opens one quote at a time and edits, reorders, removes and se
     expect(await ui.find({ type: 'Input', key: `comment:${third}:0` })).toBeUndefined()
     expect((await ui.find({ key: `edit-comment:${third}:0` }))?.text).toBe('• Add backoff.')
 
+    // Comments sit one blank row apart.
+    expect((await ui.find({ key: `comments:${third}` }))?.props.gap).toBe(1)
+
     // Add comment opens another field on the same quote; a third is added then deleted.
     await ui.press({ key: `note:${third}` })
     await ui.input({ key: `comment:${third}:1`, text: 'And jitter.' })
@@ -175,10 +178,10 @@ test('the composer opens one quote at a time and edits, reorders, removes and se
     await ui.press({ key: 'send' })
 
     expect(submitted.at(-1)).toBe(
-      'Please review the following feedback on your earlier replies.\n\n' +
-        'Quote 1:\n> Third passage\n\nComments:\n1. Add backoff.\n2. And jitter.\n\n' +
-        'Quote 2:\n> First passage\n\nComment:\nNot a singleton.\n\n' +
-        'Overall instruction:\nFix them all.',
+      'Feedback:\n\n' +
+        '1. > Third passage\n   - Add backoff.\n   - And jitter.\n\n' +
+        '2. > First passage\n   - Not a singleton.\n\n' +
+        'Overall: Fix them all.',
     )
     expect(await quoteIds(ui)).toHaveLength(0)
     await ui.unmount()
@@ -223,4 +226,98 @@ test('the pane has no Add selection button; /quote still says how to quote, with
   expect(await ui.find({ type: 'Button', key: 'add-last' })).toBeDefined()
   expect((await run($, 'quote')).text).not.toMatch(/[<>]/)
   await ui.unmount()
+})
+
+test('pressing a quote goes to the message it came from, or says why it cannot', async ($, on) => {
+  const toasts: string[] = []
+  engine(on, { text: 'Use middleware.', requestId: 'msg-7' }, toasts)
+  await start($)
+  await run($, 'quote')
+  await run($, 'quote', 'Typed by hand')
+
+  const ui = await $.ui.mount({ ...PANE, surface: 'vscode' })
+  const [fromSelection = '', typed = ''] = await quoteIds(ui)
+  // A quote from a selection knows its message, so the pane asks the chat to scroll there.
+  // The test kit has no chat to scroll, so the attempt surfaces as "Couldn't go…".
+  await ui.press({ key: `open:${fromSelection}` })
+  await ui.press({ key: `jump:${fromSelection}` })
+  expect(toasts.at(-1)).toMatch(/Couldn't go to the message/)
+
+  // A quote typed by hand that no reply holds has no message to go to: say so instead of trying.
+  await ui.press({ key: `open:${typed}` })
+  await ui.press({ key: `jump:${typed}` })
+  expect(toasts.at(-1)).toMatch(/Couldn't find/)
+  await ui.unmount()
+})
+
+test('a quote with no message id is found by its text among the replies drawn so far', async ($, on) => {
+  const toasts: string[] = []
+  engine(on, undefined, toasts)
+  // Stands for the engine's own drawing of a transcript row beneath the mod.
+  on('ui.render', ($, e) => {
+    const { Text } = $.ui.resolve(e)
+    return <Text>row</Text>
+  })
+  await start($)
+
+  // Claude's reply as the surface draws it: markdown, which the selection reads as plain text.
+  const reply = await $.ui.mount({
+    plugin: 'multi-quote',
+    surface: 'vscode',
+    component: 'AssistantMessage',
+    requestId: 'msg-9',
+    props: { text: '- **Use middleware** for auth.\n- Retry with `backoff`.', isFirstOfReply: true },
+  })
+  await reply.unmount()
+
+  await run($, 'quote', 'Use middleware for auth. Retry with backoff')
+  await run($, 'quote', 'Something Claude never said')
+  const ui = await $.ui.mount({ ...PANE, surface: 'vscode' })
+  const [found = '', missing = ''] = await quoteIds(ui)
+
+  // Found: the pane asks the chat to scroll there (the test kit has no chat, hence "Couldn't go").
+  await ui.press({ key: `open:${found}` })
+  await ui.press({ key: `jump:${found}` })
+  expect(toasts.at(-1)).toMatch(/Couldn't go to the message/)
+
+  await ui.press({ key: `open:${missing}` })
+  await ui.press({ key: `jump:${missing}` })
+  expect(toasts.at(-1)).toMatch(/Couldn't find/)
+  await ui.unmount()
+})
+
+const CAVEAT =
+  "<local-command-caveat>The command below was run directly in Claude Code, not sent to you as a request, and its output goes straight to the user. It's recorded here as context for later messages.</local-command-caveat>"
+const commandRecord = (name: string, args = '') =>
+  `<command-name>/${name}</command-name>\n            <command-message>${name}</command-message>\n            <command-args>${args}</command-args>`
+
+test("the chat keeps only a short note of the mod's own commands, and other commands whole", async ($, on) => {
+  engine(on)
+  const session = mock.session(on)
+  await start($)
+  const append = (text: string) =>
+    $.session.append({
+      message: { type: 'user', role: 'user', content: [{ type: 'text', text }] },
+      door: 'command',
+      origin: { kind: 'composer' },
+      uuid: crypto.randomUUID(),
+    })
+  const texts = () =>
+    session.appended().map(row => row.message.content.map(block => ('text' in block ? block.text : '')).join(''))
+
+  // Another command's record stays as Claude Code wrote it.
+  await append(CAVEAT)
+  await append(commandRecord('cost'))
+  // The mod's own command: the caveat goes, the record shrinks to the command's name.
+  await run($, 'quote', 'Use middleware.')
+  await append(CAVEAT)
+  await append(commandRecord('quote', 'Use middleware.'))
+  // And the next other command is whole again.
+  await append(CAVEAT)
+  await append(commandRecord('cost'))
+
+  const [costCaveat, cost, quoteCaveat, quote, nextCaveat, nextCost] = texts()
+  expect([costCaveat, cost, nextCaveat, nextCost]).toEqual([CAVEAT, commandRecord('cost'), CAVEAT, commandRecord('cost')])
+  expect(quoteCaveat).not.toContain('local-command-caveat')
+  expect(quote).toBe('/quote')
 })

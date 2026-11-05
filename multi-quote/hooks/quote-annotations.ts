@@ -50,13 +50,6 @@ export const pruneComments = (list: QuoteAnnotation[]) =>
     quote.comments.every(one => one.trim()) ? quote : { ...quote, comments: quote.comments.filter(one => one.trim()) },
   )
 
-const commentsBlock = (comments: readonly string[]) => {
-  const written = comments.map(one => one.trim()).filter(Boolean)
-  if (written.length <= 1) return `Comment:\n${written[0] ?? '(no comment)'}`
-
-  return `Comments:\n${written.map((one, at) => `${at + 1}. ${one}`).join('\n')}`
-}
-
 /** The text on one line, cut to `max` characters with an ellipsis. */
 export const summarize = (text: string, max: number) => {
   const line = text.replace(/\s+/g, ' ').trim()
@@ -64,27 +57,27 @@ export const summarize = (text: string, max: number) => {
   return line.length > max ? `${line.slice(0, max - 1)}…` : line
 }
 
-const quoteBlock = (text: string) =>
-  text
-    .trim()
-    .split('\n')
-    .map(line => `> ${line}`)
-    .join('\n')
-
-/** The follow-up the composer sends; empty when there is nothing to send. */
-export const buildFollowUp = (
-  list: readonly QuoteAnnotation[],
-  instruction: string,
-): string => {
+/**
+ * The follow-up the composer sends, kept short to spend few tokens; empty when there is
+ * nothing to send. Each quote is numbered with its comments listed under it:
+ *
+ *   Feedback:
+ *
+ *   1. > quoted line
+ *      - comment
+ *
+ *   Overall: instruction
+ */
+export const buildFollowUp = (list: readonly QuoteAnnotation[], instruction: string): string => {
   if (list.length === 0) return ''
-  const parts = list.map(
-    quote => `Quote ${quote.order}:\n${quoteBlock(quote.selectedText)}\n\n${commentsBlock(quote.comments)}`,
-  )
+  const parts = list.map(quote => {
+    const lines = quote.selectedText.trim().split('\n')
+    const quoted = lines.map((line, at) => `${at === 0 ? `${quote.order}.` : '  '} > ${line}`)
+    const comments = quote.comments.map(one => one.trim()).filter(Boolean).map(one => `   - ${one}`)
+
+    return [...quoted, ...comments].join('\n')
+  })
   const overall = instruction.trim()
 
-  return [
-    'Please review the following feedback on your earlier replies.',
-    ...parts,
-    ...(overall ? [`Overall instruction:\n${overall}`] : []),
-  ].join('\n\n')
+  return ['Feedback:', ...parts, ...(overall ? [`Overall: ${overall}`] : [])].join('\n\n')
 }
