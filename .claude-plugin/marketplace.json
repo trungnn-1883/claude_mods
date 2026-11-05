@@ -1,11 +1,18 @@
 {
   "name": "claude-mods",
-  "owner": { "name": "trungnn-1883" },
+  "owner": {
+    "name": "trungnn-1883"
+  },
   "plugins": [
     {
       "name": "multi-quote",
       "source": "./multi-quote",
       "description": "Quote several passages of Claude's replies, comment on each, send them back as one follow-up"
+    },
+    {
+      "name": "weekly-quota",
+      "source": "./weekly-quota",
+      "description": "Status line: weekly and 5-hour quota left, with an animated cat; /cat toggles the cat"
     }
   ]
 }
