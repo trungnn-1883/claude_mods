@@ -1,6 +1,6 @@
 # multi-quote
 
-Mod cho Claude Code, hoạt động giống "quote đoạn đã chọn" của ChatGPT nhưng quote được nhiều đoạn cùng lúc. Bạn chọn text trong câu trả lời của Claude, thêm mỗi đoạn thành một quote, viết comment cho từng quote, rồi gửi tất cả lại cho Claude trong một tin nhắn follow-up duy nhất. Tin nhắn đi như prompt của chính bạn, trong cùng session, nên Claude vẫn giữ nguyên ngữ cảnh.
+Mod cho Claude Code, hoạt động giống "quote đoạn đã chọn" của ChatGPT nhưng quote được nhiều đoạn cùng lúc. Bạn chọn text trong câu trả lời của Claude, thêm mỗi đoạn thành một quote, viết comment cho từng quote, rồi gửi tất cả lại cho Claude trong một tin nhắn follow-up duy nhất. Tin nhắn đi như prompt của chính bạn, trong cùng session, nên Claude vẫn giữ nguyên ngữ cảnh. Mod không gửi gì ra ngoài hay cho bên thứ ba: xem [docs/privacy.md](docs/privacy.md).
 
 <img src="docs/images/quotes-pane.png" alt="Khung Quotes trong VS Code" width="400">
 
@@ -35,6 +35,7 @@ Repo là private: máy bạn cần quyền đọc repo và một git credential 
 | [docs/usage.md](docs/usage.md) | Từng command, quy trình làm việc, nội dung tin nhắn gửi cho Claude, giới hạn |
 | [docs/interface.md](docs/interface.md) | Pane Quotes: ảnh chụp, từng thành phần và thao tác khi bấm |
 | [docs/examples.md](docs/examples.md) | Ba ví dụ từ đầu đến cuối, kèm nguyên văn tin nhắn gửi cho Claude |
+| [docs/privacy.md](docs/privacy.md) | Dữ liệu đi đâu: mod không gửi gì ra ngoài, chỉ tin bạn bấm gửi mới tới Claude |
 
 ## Các file trong thư mục
 
